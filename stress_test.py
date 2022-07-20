@@ -10,7 +10,10 @@ import datetime
 from optparse import OptionParser
 
 from payloads import PAYLOADS_EVAL, PAYLOADS_EVAL_LAUNCH  # local module
+
+# SETTINGS.
 from settings_scenarios import dummy_settings as settings  # local module
+#from settings_scenarios import settings as settings  # local module
 
 # SETTINGS.
 EVALUATOR_URL = "http://localhost:5000/"  # Target url.

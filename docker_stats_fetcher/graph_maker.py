@@ -33,6 +33,7 @@ def create_graph(filename, start=None, end=None):
             if (start and end and start <= timestamp and end >= timestamp) or (start and end is None and start <= timestamp) or (start is None and end is None):
                 CPUPerc.append(float(obj['CPUPerc'].replace("%", "")))
                 MemPerc.append(float(obj['MemPerc'].replace("%", "")))
+
                 NetI.append(float(obj['NetIO'].split("/")[0][:-3]))
                 NetO.append(float(obj['NetIO'].split("/")[1][1:-2]))
 

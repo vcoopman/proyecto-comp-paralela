@@ -16,5 +16,5 @@ fi
 while true
 do
 	sleep 0.010
-	docker stats $container_name --no-stream --format "{\"timestamp\":\"`date +%FT%T`\",\"Name\":\"{{ .Container }}\",\"MemPerc\":\"{{ .MemPerc }}\",\"CPUPerc\":\"{{ .CPUPerc }}\",\"NetIO\":\"{{ .NetIO }}\"}" >> $container_name.ouput.json
+	docker stats $container_name --no-stream --format "{\"timestamp\":\"`date +%FT%T`\",\"Name\":\"{{ .Container }}\",\"MemPerc\":\"{{ .MemPerc }}\",\"CPUPerc\":\"{{ .CPUPerc }}\",\"NetIO\":\"{{ .NetIO }}\"}" >> $container_name.output.json
 done
