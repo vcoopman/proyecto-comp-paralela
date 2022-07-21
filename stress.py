@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import csv
 import sys
 import requests
 import random
@@ -14,15 +15,15 @@ from optparse import OptionParser
 from payloads import PAYLOADS_EVAL, PAYLOADS_EVAL_LAUNCH  # local module
 
 # SETTINGS.
-from settings_scenarios import dummy_settings as settings  # local module
+from settings_scenarios import dummy_settings_2 as settings  # local module
 #from settings_scenarios import settings as settings  # local module
 
 # SETTINGS.
-EVALUATOR_URL = "http://TESTING_logdetector-evaluator:5000/"  # Target url.
+#EVALUATOR_URL = "http://TESTING_logdetector-evaluator:5000/"  # Target url.
+EVALUATOR_URL = "http://localhost:5000/"  # Target url.
 VERBOSE = False
 
 test_number = 1
-
 
 def kill(proc_pid):
     """
@@ -237,15 +238,25 @@ def main():
     while True:
         print("Which scenario do you want to run?")
         print("[0] eval")
-        print("[1] eval-launch")
-        print("[2] eval-launch / eval")
-        print("[3] all")
+        # print("[1] eval-launch")
+        # print("[2] eval-launch / eval")
+        # print("[3] all")
         print()
         print("[4] exit")
         scenario = int(input())
 
         if scenario == 0:
             results = scenario_0()
+
+            # Write results to csv.
+            timenow = datetime.datetime.now().strftime("%FT%H-%M-%S")
+            results_file = f"results/results-eval-{timenow}.csv"
+            with open(results_file, mode='w') as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=results[0].keys())
+                writer.writeheader()
+
+                for result in results:
+                    writer.writerow(result)
 
             x = []
             y = []
@@ -312,6 +323,16 @@ def main():
                 total_logs += r['total_logs']
             print(f"Scenario 0 - Total Logs: {total_logs} - Elapsed: {'%.2f' % elapsed} ms - Single Log Time Average: {'%.2f' % ( elapsed/float(total_logs) )} ms")
             print()
+
+            # Write results to csv.
+            with open(results_file, mode='w') as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=results[0].keys())
+                writer.writeheader()
+
+                for result in results:
+                    writer.writerow(result)
+
+
             plot_scenario(x, y, "Scenario 0")
 
             results = scenario_1()

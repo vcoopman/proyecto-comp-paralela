@@ -1,3 +1,5 @@
+import numpy as np
+
 settings = {
     '0': {
         'log_amount' : [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
@@ -19,6 +21,22 @@ dummy_settings = {
     '0': {
         'log_amount' : [1, 2, 3],
         'client_count' : [ 1, 2, 3]
+    },
+    '1': {
+        'log_amount' : [1, 2, 3],
+        'client_count' : [ 1, 2, 3]
+    },
+    '2': {
+        'log_amount' : [1, 2, 3],
+        'client_count' : [ 1, 2, 3],
+        'rate': [ 1, 2, 3 ]
+    }
+}
+
+dummy_settings_2 = {
+    '0': {
+        'log_amount' : [int(x) for x in np.linspace(1, 50, 50)],
+        'client_count' : [int(x) for x in np.linspace(1, 5, 5)]
     },
     '1': {
         'log_amount' : [1, 2, 3],

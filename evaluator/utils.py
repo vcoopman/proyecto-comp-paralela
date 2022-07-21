@@ -46,7 +46,7 @@ def eval_condition_text(cond, log, data):
     """
     # Prepare exec_string
     exec_string = create_exec_string(cond, log, data)
-    print(f"exec_string for eval_condition_text: {exec_string}")
+    #print(f"exec_string for eval_condition_text: {exec_string}")
 
     # Run subprocess/condition 
     result = subprocess.run(['python3', '-c', exec_string], capture_output=True, text=True)
@@ -114,9 +114,9 @@ except Exception as ex:
 
 def clean_log_text(text: str):
     """ Removes \n symbols in log's text """
-    print("cleaning log: ", text)
-    print("cleaning log: ", text)
-    print("cleaning log: ", text)
+    #print("cleaning log: ", text)
+    #print("cleaning log: ", text)
+    #print("cleaning log: ", text)
 
     clean_log = text.replace("\n", " ")
     return clean_log

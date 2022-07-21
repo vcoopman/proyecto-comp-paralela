@@ -19,13 +19,13 @@ def evaluate():
     true_conditions = [] # stores numerations of true conditions.
     context = payload['context'] # context to use for this checks. This will be updated after every true condition check.
 
-    print(payload)
+    # print(payload)
     payload['log']['Text'] = utils.clean_log_text(payload['log']['Text'])
     for cond in payload['conditions']:
         if cond['type'] == 'Standard':
             try :
                 result = utils.eval_condition_text(cond['text'], payload['log'], context)
-                print(result)
+                # print(result)
                 if result[0]:
                     true_conditions.append(cond['numeration'])
                     context = result[1]
@@ -39,7 +39,7 @@ def evaluate():
             try :
                 # Check text
                 result1 = utils.eval_condition_text(cond['text'], payload['log'], context)
-                print(result1)
+                # print(result1)
 
                 # Check time
                 result2 = (payload['logProcessingTime'] - payload['stateTime'] <= cond['timeRange'])
@@ -86,7 +86,7 @@ def evaluate_launch():
 
     """
     payload = request.json['payload']
-    print(payload)
+    # print(payload)
     payload['log']['Text'] = utils.clean_log_text(payload['log']['Text'])
     cond = payload['launchCondition']
     # create exec string
