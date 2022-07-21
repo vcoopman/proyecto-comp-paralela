@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  logdetector-evaluator:
+    image: evaluator-1.0.0 
+    build:
+      context: . 
+    deploy:
+      replicas: 3
+    networks:
+      - "default"
+
+  test-support-container: 
+    image: evaluator-test-support
+    networks:
+      - "default"
+    volumes:
+      - .:/app
+
+networks:
+  default:
+    driver: overlay

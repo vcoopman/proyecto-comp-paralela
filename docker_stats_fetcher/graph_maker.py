@@ -70,8 +70,8 @@ def create_graph(filename, start=None, end=None):
                  title='Network Output over Time.')
     ax[1][1].grid()
 
-    # fig.savefig("test.png")
-    plt.show()
+    fig.savefig(f"../graphs/docker-stats-{filename}.png")
+    #plt.show()
 
 
 def main():
