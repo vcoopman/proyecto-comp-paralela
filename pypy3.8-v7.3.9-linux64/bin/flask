@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/home/vcoopman/Documents/Universidad/Introduccion a la Computacion Paralela/proyecto/pypy3.8-v7.3.9-linux64/bin/pypy" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from flask.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

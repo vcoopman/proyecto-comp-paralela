@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import requests
 import random
@@ -227,15 +229,7 @@ def plot_scenario(x, y, title):
     plt.savefig(f"graphs/{title}-{timenow}", bbox_inches='tight')
 
 
-def main(container):
-
-    # Start docker_stats_fetcher.
-    p1 = None
-    try:
-        cmd = f"cd docker_stats_fetcher; ./docker_stats_fetcher.sh {container}"
-        p1 = subprocess.Popen(cmd, shell=True)
-    except Exception as ex:
-        print("WARNING: Error starting docker_stats_fetcher.sh process.")
+def main():
 
     while True:
         print("Which scenario do you want to run?")
@@ -373,8 +367,4 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
 
-    if options.container is None:
-        print("ERROR: Missing container.")
-        sys.exit(1)
-
-    main(options.container)
+    main()
