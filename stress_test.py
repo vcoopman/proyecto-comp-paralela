@@ -18,7 +18,7 @@ from settings_scenarios import dummy_settings as settings  # local module
 #from settings_scenarios import settings as settings  # local module
 
 # SETTINGS.
-EVALUATOR_URL = "http://localhost:5000/"  # Target url.
+EVALUATOR_URL = "http://TESTING_logdetector-evaluator:5000/"  # Target url.
 VERBOSE = False
 
 test_number = 1
@@ -230,6 +230,9 @@ def plot_scenario(x, y, title):
 
 
 def main():
+    # Start docker_stats_fetcher.
+    # cmd = f"cd docker_stats_fetcher; ./docker_stats_fetcher.sh {container}"
+    # p1 = subprocess.Popen(cmd, shell=True)
 
     while True:
         print("Which scenario do you want to run?")
@@ -348,11 +351,11 @@ def main():
             print("Scenario not found.")
 
     # Clean.
-    if p1 is not None:
-        try:
-            p1.wait(timeout=0.1)
-        except subprocess.TimeoutExpired:
-            kill(p1.pid)
+    #if p1 is not None:
+    #    try:
+    #        p1.wait(timeout=0.1)
+    #    except subprocess.TimeoutExpired:
+    #        kill(p1.pid)
 
 
 if __name__ == "__main__":

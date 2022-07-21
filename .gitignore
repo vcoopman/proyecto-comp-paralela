@@ -1,4 +1,4 @@
 graphs/*.png
 */*.output.json
 Avance*/
-*/__pycache__
+__pycache__/
