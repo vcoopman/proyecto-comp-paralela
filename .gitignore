@@ -2,3 +2,4 @@ graphs/*.png
 */*.output.json
 Avance*/
 __pycache__/
+*.csv

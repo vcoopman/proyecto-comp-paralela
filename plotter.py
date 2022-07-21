@@ -23,29 +23,46 @@ if not options.input_file:
 clients = []
 requests = []
 TPRs = [] # time per request
+max_TPR = (0, None, None)
+min_TPR = (10000, None, None)
+avg_TPR = 0
 with open(options.input_file, mode='r') as csv_file:
-  csv_reader = csv.DictReader(csv_file)
+    csv_reader = csv.DictReader(csv_file)
 
-  line_count = 0
-  for row in csv_reader:
-    if line_count == 0:
-        print(f'Column names are {", ".join(row)}')
+    line_count = 0
+    sum = 0
+    for row in csv_reader:
+        if line_count == 0:
+            print(f'Column names are {", ".join(row)}')
 
-    clients.append(int(row['clients']))
-    requests.append(int(row['log']))
-    TPRs.append(float(row['single_log_time']))
-    line_count += 1
+        current = (int(row['clients']), int(row['log']), float(row['single_log_time']))
 
-  print(f'Processed {line_count} lines.')
+        clients.append(current[0])
+        requests.append(current[1])
+        TPRs.append(current[2])
 
-print(clients)
-print(requests)
-print(TPRs)
+        if current[2] > max_TPR[0]:
+            max_TPR = current
+        elif current[2] < min_TPR[0]:
+            min_TPR = current
 
-fig = plt.figure()
+        avg_TPR += current[2]
+        line_count += 1
+
+    avg_TPR = float(avg_TPR/line_count)
+    print(f'Processed {line_count} lines.')
+
+# print(clients)
+# print(requests)
+# print(TPRs)
+print("MIN: ", min_TPR)
+print("MAX: ", max_TPR)
+print("AVG: ", avg_TPR)
+
 fig = plt.axes(projection='3d')
-fig.plot_trisurf(clients, requests, TPRs, cmap=plt.cm.Spectral)
-fig.set_xlabel('x')
+fig.plot_trisurf(clients, requests, TPRs, cmap='RdYlGn_r')
+fig.set_xlabel('clients')
 fig.set_ylabel('requests')
-fig.set_zlabel('time per request')
+fig.set_zlabel('time per request (ms)')
 plt.show()
+
