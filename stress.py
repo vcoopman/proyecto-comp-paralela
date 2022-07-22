@@ -63,6 +63,7 @@ def create_test_threads(endpoint, clients, amount):
     method = None
     payload = None
 
+    raise Exception("Look at this!")
     if endpoint == "eval":
         url = EVALUATOR_URL + "eval"
         p_index = random.randint(0, len(PAYLOADS_EVAL) - 1)

@@ -22,6 +22,7 @@ def create_graph(filename, start=None, end=None):
 
     # Parse input.
     # Parse .json created by docker_stats_fetcher.
+    good_ones = 0
     with open(filename) as f:
         lines = [line.rstrip() for line in f]
         json_lines = [json.loads(line) for line in lines]
@@ -31,13 +32,24 @@ def create_graph(filename, start=None, end=None):
 
             # Case start and end.
             if (start and end and start <= timestamp and end >= timestamp) or (start and end is None and start <= timestamp) or (start is None and end is None):
-                CPUPerc.append(float(obj['CPUPerc'].replace("%", "")))
-                MemPerc.append(float(obj['MemPerc'].replace("%", "")))
+                good_ones += 1
+                try:
+                    CPUPerc.append(float(obj['CPUPerc'].replace("%", "")))
+                    # NetI.append(float(obj['NetIO'].split("/")[0][:-3]))
+                    # NetO.append(float(obj['NetIO'].split("/")[1][1:-2]))
+                except:
+                    print("skipping one line due to format!")
+                    good_ones -= 1
 
-                NetI.append(float(obj['NetIO'].split("/")[0][:-3]))
-                NetO.append(float(obj['NetIO'].split("/")[1][1:-2]))
+                try:
+                    MemPerc.append(float(obj['MemPerc'].replace("%", "")))
+                except:
+                    CPUPerc.pop()
+                    print("skipping one line due to format!")
+                    good_ones -= 1
 
-    t = np.arange(0.0, len(CPUPerc) * 0.010, 0.010)
+
+    t = np.linspace(0.0, good_ones * 0.010, good_ones)
 
     fig, ax = plt.subplots(2, 2)
     fig.canvas.manager.set_window_title(f"Resources graph for {filename}")
@@ -59,19 +71,19 @@ def create_graph(filename, start=None, end=None):
     ax[0][1].grid()
 
     # NetIO graph.
-    ax[1][0].plot(t, NetI, label="Network Input")
-    # ax[1].plot(t, NetO, label="Network Output")
-    ax[1][0].set(xlabel='time (s)', ylabel='Network Input (GB)',
-                 title='Network Input over Time.')
-    ax[1][0].grid()
+    # ax[1][0].plot(t, NetI, label="Network Input")
+    # # ax[1].plot(t, NetO, label="Network Output")
+    # ax[1][0].set(xlabel='time (s)', ylabel='Network Input (GB)',
+                 # title='Network Input over Time.')
+    # ax[1][0].grid()
 
-    ax[1][1].plot(t, NetO, label="Network Output")
-    ax[1][1].set(xlabel='time (s)', ylabel='Network Input (MB)',
-                 title='Network Output over Time.')
-    ax[1][1].grid()
+    # ax[1][1].plot(t, NetO, label="Network Output")
+    # ax[1][1].set(xlabel='time (s)', ylabel='Network Input (MB)',
+                 # title='Network Output over Time.')
+    # ax[1][1].grid()
 
     fig.savefig(f"../graphs/docker-stats-{filename}.png")
-    #plt.show()
+    plt.show()
 
 
 def main():

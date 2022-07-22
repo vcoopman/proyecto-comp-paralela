@@ -23,8 +23,8 @@ if not options.input_file:
 clients = []
 requests = []
 TPRs = [] # time per request
-max_TPR = (0, None, None)
-min_TPR = (10000, None, None)
+max_TPR = (None, None, 0)
+min_TPR = (None, None, 1000)
 avg_TPR = 0
 with open(options.input_file, mode='r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
@@ -41,20 +41,21 @@ with open(options.input_file, mode='r') as csv_file:
         requests.append(current[1])
         TPRs.append(current[2])
 
-        if current[2] > max_TPR[0]:
+        if current[2] > max_TPR[2]:
             max_TPR = current
-        elif current[2] < min_TPR[0]:
+
+        if current[2] < min_TPR[2]:
             min_TPR = current
 
         avg_TPR += current[2]
         line_count += 1
 
+        print(current)
+
     avg_TPR = float(avg_TPR/line_count)
     print(f'Processed {line_count} lines.')
 
-# print(clients)
-# print(requests)
-# print(TPRs)
+
 print("MIN: ", min_TPR)
 print("MAX: ", max_TPR)
 print("AVG: ", avg_TPR)
