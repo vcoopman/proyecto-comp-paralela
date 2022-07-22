@@ -1,0 +1,11 @@
+FROM python:3.8-buster
+
+WORKDIR /app
+
+COPY . .
+COPY requirements.txt requirements.txt
+RUN ./pypy3.8-v7.3.9-linux64/bin/pypy -m ensurepip
+RUN ./pypy3.8-v7.3.9-linux64/bin/pypy -mpip install -r requirements.txt
+
+EXPOSE 5000 
+CMD [ "./pypy3.8-v7.3.9-linux64/bin/pypy", "-mgunicorn", "app:app", "-b 0.0.0.0:5000", "--workers", "9", "--access-logfile", "/dev/stdout" ]
