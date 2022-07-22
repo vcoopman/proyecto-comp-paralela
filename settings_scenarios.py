@@ -35,8 +35,8 @@ dummy_settings = {
 
 dummy_settings_2 = {
     '0': {
-        'log_amount' : [int(x) for x in np.linspace(10, 100, 10)],
-        'client_count' : [int(x) for x in np.linspace(3, 9, 7)]
+        'log_amount' : [int(x) for x in np.linspace(30, 80, 20)],
+        'client_count' : [int(x) for x in np.linspace(3, 40, 20)]
     },
     '1': {
         'log_amount' : [1, 2, 3],

@@ -10,6 +10,15 @@ services:
     networks:
       - "default"
 
+  logdetector-evaluator-pypy:
+    image: pypy-evaluator
+    build:
+      context: . 
+    deploy:
+      replicas: 1
+    networks:
+      - "default"
+
   test-support-container: 
     image: evaluator-test-support
     networks:

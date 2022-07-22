@@ -16,11 +16,12 @@ from payloads import PAYLOADS_EVAL, PAYLOADS_EVAL_LAUNCH  # local module
 
 # SETTINGS.
 from settings_scenarios import dummy_settings_2 as settings  # local module
+#from settings_scenarios import dummy_settings as settings  # local module
 #from settings_scenarios import settings as settings  # local module
 
 # SETTINGS.
-#EVALUATOR_URL = "http://TESTING_logdetector-evaluator:5000/"  # Target url.
-EVALUATOR_URL = "http://localhost:5000/"  # Target url.
+EVALUATOR_URL = "http://TESTING_logdetector-evaluator-pypy:5000/"  # Target url.
+#EVALUATOR_URL = "http://localhost:5000/"  # Target url.
 VERBOSE = False
 
 test_number = 1
