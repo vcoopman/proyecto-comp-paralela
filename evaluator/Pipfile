@@ -7,6 +7,10 @@ name = "pypi"
 Flask = "*"
 gunicorn = "*"
 flask = "*"
+falcon = "*"
+uvloop = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 

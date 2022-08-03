@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+  logdetector-evaluator-flask:
+    image: logdetector-evaluator-flask 
+    build:
+      context: . 
+      dockerfile: Dockerfile_flask
+    networks:
+      - "default"
+
+  logdetector-evaluator-falcon:
+    image: logdetector-evaluator-falcon 
+    build:
+      context: . 
+      dockerfile: Dockerfile_falcon
+    networks:
+      - "default"
+
+  logdetector-evaluator-fastapi:
+    image: logdetector-evaluator-fastapi 
+    build:
+      context: . 
+      dockerfile: Dockerfile_fastapi
+    networks:
+      - "default"
+
+  logdetector-evaluator-japronto:
+    image: logdetector-evaluator-japronto 
+    build:
+      context: . 
+      dockerfile: Dockerfile_japronto
+    networks:
+      - "default"
+
+  test-support-container: 
+    image: evaluator-test-support
+    build:
+      context: .
+      dockerfile: Dockerfile_support
+    networks:
+      - "default"
+    volumes:
+      - ../:/home
+
+networks:
+  default:
+    driver: overlay

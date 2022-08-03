@@ -2,10 +2,10 @@
 
 FROM python:3.8-buster
 
-WORKDIR /app
+WORKDIR /home
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install requests matplotlib python-dateutil psutil
+
 RUN apt-get upgrade && apt-get update
 RUN apt install vim -y
 RUN apt install curl -y

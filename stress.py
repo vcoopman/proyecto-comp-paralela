@@ -1,28 +1,21 @@
 #!/usr/bin/python3
 
 import csv
-import sys
 import requests
 import random
 import time
 import psutil
 import threading
-import subprocess
 import matplotlib.pyplot as plt
 import datetime
 from optparse import OptionParser
 
 from payloads import PAYLOADS_EVAL, PAYLOADS_EVAL_LAUNCH  # local module
+from settings_scenarios import settings_2 as settings  # local module
 
-# SETTINGS.
-from settings_scenarios import dummy_settings_2 as settings  # local module
-#from settings_scenarios import dummy_settings as settings  # local module
-#from settings_scenarios import settings as settings  # local module
-
-# SETTINGS.
-EVALUATOR_URL = "http://TESTING_logdetector-evaluator-pypy:5000/"  # Target url.
-#EVALUATOR_URL = "http://localhost:5000/"  # Target url.
-VERBOSE = False
+# EVALUATOR_URL = "http://TESTING_logdetector-evaluator-pypy:5000/"  # Target url.
+EVALUATOR_URL = "http://localhost:5000/"  # Target url.
+VERBOSE = True
 
 test_number = 1
 
@@ -42,10 +35,6 @@ def send_requests(method, url, payload, request_amount):
     Send request_amount of requests to URL.
     """
 
-    if VERBOSE:
-        print(f"URL is: {url}")
-        print(f"payload is: {payload}")
-
     for _ in range(request_amount):
         if method == "GET":
             requests.get(url, json=payload)
@@ -56,51 +45,46 @@ def send_requests(method, url, payload, request_amount):
 
 def create_test_threads(endpoint, clients, amount):
     """
-    Returns clients amount of threads, that execute amount amount of requests.
+    Returns clients amount of threads, that execute amount of requests.
     """
 
     url = None
-    p_index = None
-    method = None
-    payload = None
+    method = "POST"
 
-    raise Exception("Look at this!")
     if endpoint == "eval":
         url = EVALUATOR_URL + "eval"
-        p_index = random.randint(0, len(PAYLOADS_EVAL) - 1)
-        payload = PAYLOADS_EVAL[p_index]
-        payload = {'payload': payload}
-        method = "POST"
-
     elif endpoint == "eval-launch":
         url = EVALUATOR_URL + "eval-launch"
-        p_index = random.randint(0, len(PAYLOADS_EVAL_LAUNCH) - 1)
-        payload = PAYLOADS_EVAL_LAUNCH[p_index]
-        payload = {'payload': payload}
-        method = "POST"
-
     else:
         raise Exception(
             "Unknown endpoint. Endpoints are 'eval' and 'eval-launch'.")
 
+    # Fix to send fixed amount of logs.
+    # Amount is divided amount the clients.
+    amount = int(amount / clients)
+
     threads = []
-    for _ in range(clients):
+    for cli in range(clients):
+        if VERBOSE: print(f"client {cli} will send {amount} requests")
+
+        p_index = random.randint(0, len(PAYLOADS_EVAL) - 1)
+        payload = PAYLOADS_EVAL[p_index]
+        payload = {'payload': payload}
+
         threads.append(threading.Thread(target=send_requests,
                                         args=(method, url, payload, amount)))
 
     return threads
 
 
-def run_test_scenario(endpoint, clients, amount, clients_rate=None):
+def run_test_scenario(endpoint, clients, logs, clients_rate=None):
     """
-    Execute a test scenario.
+    Execute a test of a scenario.
 
     endpoint: Evaluator endpoint to test.
     clients: amount of parallel clients.
-    amount: amount of logs/request send per client.
+    logs: amount of logs to send (in total).
     clients_rate: amount of logdetectors per launcher.
-
-    returns:
     """
 
     global test_number
@@ -109,21 +93,15 @@ def run_test_scenario(endpoint, clients, amount, clients_rate=None):
 
     print(f"Running Test #{test_number} | {timenow}")
 
-    total_logs = None
     if clients_rate and endpoint == "eval-launch/eval":
-        total_logs = amount * (clients + (clients * clients_rate))
-        print(
-            f"Endpoint: {endpoint}  -  Rate: {clients_rate}  -  Clients: {clients}  -  Logs: {amount}  -  Total Logs: {total_logs}")
-        threads_eval_launch = create_test_threads(
-            "eval-launch", clients, amount)
-        threads_eval = create_test_threads(
-            "eval", clients*clients_rate, amount)
+        print( f"Endpoint: {endpoint}  -  Rate: {clients_rate}  -  Clients: {clients}  -  Logs: {logs}")
+        threads_eval_launch = create_test_threads( "eval-launch", clients, logs)
+        threads_eval = create_test_threads( "eval", clients*clients_rate, logs)
         threads = threads_eval + threads_eval_launch
+
     else:
-        total_logs = amount * clients
-        print(
-            f"Endpoint: {endpoint}  -  Clients: {clients}  -  Logs: {amount}  -  Total Logs: {total_logs}")
-        threads = create_test_threads(endpoint, clients, amount)
+        print( f"Endpoint: {endpoint}  -  Clients: {clients}  -  Logs: {logs}")
+        threads = create_test_threads(endpoint, clients, logs)
 
     start = time.time()
 
@@ -137,7 +115,7 @@ def run_test_scenario(endpoint, clients, amount, clients_rate=None):
 
     end = time.time()
     elapsed = '%.2f' % ((end - start) * 1000)
-    single_log_time = '%.3f' % ( float(elapsed)/float(total_logs) )
+    single_log_time = '%.3f' % ( float(elapsed)/float(logs) )
     print(f"Elapsed: {elapsed} ms")
     print(f"Single Log Time Average: {single_log_time} ms")
     print()
@@ -147,14 +125,15 @@ def run_test_scenario(endpoint, clients, amount, clients_rate=None):
     result = {
         'endpoint': endpoint,
         'clients': clients,
-        'log': amount,
-        'total_logs': total_logs,
+        'logs': logs,
         'elapsed': elapsed,
         'test#': test_number,
         'single_log_time': single_log_time
     }
+
     if clients_rate:
         result['rate'] = clients_rate
+
     return result
 
 
@@ -162,6 +141,12 @@ def scenario_0():
     """
     Test eval endpoint.
     """
+
+    if VERBOSE:
+        print(" == TEST SETTINGS ==")
+        print(f"LOGS: {settings['0']['log_amount']}")
+        print(f"CLIENTS: {settings['0']['client_count']}")
+        print()
 
     log_amount = settings['0']['log_amount']
     client_count = settings['0']['client_count']
@@ -237,6 +222,8 @@ def main():
     # cmd = f"cd docker_stats_fetcher; ./docker_stats_fetcher.sh {container}"
     # p1 = subprocess.Popen(cmd, shell=True)
 
+    print(f"EVALUATOR URL: {EVALUATOR_URL}\n")
+
     while True:
         print("Which scenario do you want to run?")
         print("[0] eval")
@@ -262,18 +249,18 @@ def main():
 
             x = []
             y = []
-            elapsed = 0.0
+            elapsed_scenario = 0.0
             total_logs = 0
             for r in results:
-                x.append(f"{r['endpoint']}|{r['clients']}|{r['log']}")
+                x.append(f"{r['endpoint']}|{r['clients']}|{r['logs']}")
                 y.append(float(r['elapsed']))
-                elapsed += float(r['elapsed'])
-                total_logs += r['total_logs']
+                elapsed_scenario += float(r['elapsed'])
+                total_logs += r['logs']
 
-            print(f"Scenario 0 - Total Logs: {total_logs} - Elapsed: {'%.2f' % elapsed} ms - Single Log Time Average: {'%.2f' % ( elapsed/float(total_logs) )} ms")
+            print(f"Scenario 0 - Total Logs: {total_logs} - Elapsed: {'%.2f' % elapsed_scenario} ms - Single Log Time Average: {'%.2f' % ( elapsed_scenario/float(total_logs) )} ms")
             print()
 
-            plot_scenario(x, y, "Scenario 0")
+            # plot_scenario(x, y, "Scenario 0")
 
         elif scenario == 1:
             results = scenario_1()
