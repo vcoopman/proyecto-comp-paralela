@@ -13,8 +13,11 @@ from optparse import OptionParser
 from payloads import PAYLOADS_EVAL, PAYLOADS_EVAL_LAUNCH  # local module
 from settings_scenarios import settings_2 as settings  # local module
 
-# EVALUATOR_URL = "http://TESTING_logdetector-evaluator-pypy:5000/"  # Target url.
-EVALUATOR_URL = "http://localhost:5000/"  # Target url.
+EVALUATOR_FALCON = "http://TEST_logdetector-evaluator-falcon:5000/"
+EVALUATOR_FASTAPI = "http://TEST_logdetector-evaluator-fastapi:5000/"
+EVALUATOR_FLASK = "http://TEST_logdetector-evaluator-flask:5000/"
+EVALUATOR_JAPRONTO = "http://TEST_logdetector-evaluator-japronto:5000/"
+
 VERBOSE = True
 
 test_number = 1
@@ -217,10 +220,23 @@ def plot_scenario(x, y, title):
     plt.savefig(f"graphs/{title}-{timenow}", bbox_inches='tight')
 
 
-def main():
+def main(container):
     # Start docker_stats_fetcher.
     # cmd = f"cd docker_stats_fetcher; ./docker_stats_fetcher.sh {container}"
     # p1 = subprocess.Popen(cmd, shell=True)
+
+    EVALUATOR_URL = None
+    if container == "flask":
+        EVALUATOR_URL = EVALUATOR_FLASK
+    elif container == "japronto":
+        EVALUATOR_URL = EVALUATOR_JAPRONTO
+    elif container == "falcon":
+        EVALUATOR_URL = EVALUATOR_FALCON
+    elif container == "fastapi":
+        EVALUATOR_URL = EVALUATOR_FASTAPI
+
+    if EVALUATOR_URL == None:
+        raise Exception('Invalid container')
 
     print(f"EVALUATOR URL: {EVALUATOR_URL}\n")
 
@@ -380,4 +396,7 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
 
-    main()
+    if options.container is None:
+        raise Exception('Missing container')
+
+    main(options.container)
