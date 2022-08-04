@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile_flask
     networks:
       - "default"
+    ports:
+      - 5000:5000
 
   logdetector-evaluator-falcon:
     image: logdetector-evaluator-falcon 
@@ -16,6 +18,8 @@ services:
       dockerfile: Dockerfile_falcon
     networks:
       - "default"
+    ports:
+      - 6000:6000
 
   logdetector-evaluator-fastapi:
     image: logdetector-evaluator-fastapi 
@@ -24,6 +28,8 @@ services:
       dockerfile: Dockerfile_fastapi
     networks:
       - "default"
+    ports:
+      - 7000:7000
 
   logdetector-evaluator-japronto:
     image: logdetector-evaluator-japronto 
@@ -32,16 +38,8 @@ services:
       dockerfile: Dockerfile_japronto
     networks:
       - "default"
-
-  test-support-container: 
-    image: evaluator-test-support
-    build:
-      context: .
-      dockerfile: Dockerfile_support
-    networks:
-      - "default"
-    volumes:
-      - ../:/home
+    ports:
+      - 8000:8000
 
 networks:
   default:

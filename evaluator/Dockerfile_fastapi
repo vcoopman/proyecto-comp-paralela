@@ -6,5 +6,5 @@ RUN pip install fastapi uvicorn gunicorn
 
 COPY . .
 
-EXPOSE 5000 
-CMD [ "gunicorn", "app_fastapi:app", "-b 0.0.0.0:5000", "--workers", "9", "--access-logfile", "/dev/stdout" ]
+EXPOSE 7000 
+CMD [ "gunicorn", "app_fastapi:app", "-b 0.0.0.0:7000", "--worker-class", "uvicorn.workers.UvicornWorker", "--workers", "1", "--access-logfile", "/dev/stdout" ]

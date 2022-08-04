@@ -3,7 +3,7 @@ from japronto import Application
 from eval_func import eval_func # local module
 
 DEBUG = True
-PORT = 5000
+PORT = 8000
 
 def evaluate(request):
     payload = request.json['payload']

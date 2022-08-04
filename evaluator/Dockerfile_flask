@@ -7,4 +7,4 @@ RUN pip install flask gunicorn
 COPY . .
 
 EXPOSE 5000 
-CMD [ "gunicorn", "app_flask:app", "-b 0.0.0.0:5000", "--workers", "9", "--access-logfile", "/dev/stdout" ]
+CMD [ "gunicorn", "app_flask:app", "-b 0.0.0.0:5000", "--workers", "1", "--access-logfile", "/dev/stdout" ]

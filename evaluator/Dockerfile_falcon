@@ -6,5 +6,5 @@ RUN pip install falcon gunicorn
 
 COPY . .
 
-EXPOSE 5000 
-CMD [ "gunicorn", "app_falcon:app", "-b 0.0.0.0:5000", "--workers", "9", "--access-logfile", "/dev/stdout" ]
+EXPOSE 6000 
+CMD [ "gunicorn", "app_falcon:app", "-b 0.0.0.0:6000", "--workers", "1", "--access-logfile", "/dev/stdout" ]
