@@ -66,6 +66,8 @@ Results of the test will be writen in a .csv file into the results/ folder.
 Results can be plotted with:
     
     python3 bar_plotter.py
+    
+![Example bar graph](bar_graph_example.png)
   
 ##### (4) Optional if you are using docker, you can monitor the use of resources done by a evaluator instance.
 
@@ -75,6 +77,8 @@ Results are written into a .json file to the docker_stats_fetcher/ folder.
 They can be plotted using:
 
     pipenv run python3 graph_maker.py -f <input_file> -s <start_date> -e <end_date>
+    
+![Example docker stats graph](docker_stats_graph_example.png)
 
 ##### (5) Test the FastAPI evaluator with variable amount of gunicorn workers. *This test requires Docker*.
 
@@ -85,6 +89,8 @@ And enter a 1 to active the scenario. Then the a 2 to select the FastAPI framewo
 ## Deprecated/Old stuff
 
 ##### (1) Previously 3D graphics like:
+
+![Example 3d graph](3d_graph_example.png)
 
 Could be done with _3d_plotter.py_. This problably won't work anymore as the _stress.py_ changed.
 
